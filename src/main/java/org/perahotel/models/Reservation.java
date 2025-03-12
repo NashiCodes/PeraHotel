@@ -8,7 +8,6 @@ import java.util.UUID;
 
 public class Reservation {
     private final UUID id = UUID.randomUUID();
-    private UUID reservationValidatedBy;
     private Room room;
     private UUID guestId;
     private int days;
@@ -18,12 +17,11 @@ public class Reservation {
     public Reservation() {
     }
 
-    public Reservation(Room room, UUID guestId, int days, UUID reservationValidatedBy) {
+    public Reservation(Room room, UUID guestId, int days) {
         this.room = room;
         this.guestId = guestId;
         this.days = days;
         this.setState(InProgress.getInstance());
-        this.reservationValidatedBy = reservationValidatedBy;
     }
 
     public void CheckIn() {
@@ -91,9 +89,5 @@ public class Reservation {
 
     public double Cost() {
         return room.Cost() * days;
-    }
-
-    public UUID getReservationValidatedBy() {
-        return reservationValidatedBy;
     }
 }

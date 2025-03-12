@@ -1,12 +1,13 @@
 package org.perahotel.staff;
 
+import org.perahotel.models.Reservation;
 import org.perahotel.shared.Request;
 
 public abstract class Employee {
     protected double Salary = 0;
     protected double Bonus = 0;
     protected String Name = "";
-    private Employee next;
+    protected Employee next;
 
     protected abstract double calculateSalary();
 
@@ -18,7 +19,7 @@ public abstract class Employee {
         this.Bonus = bonus;
     }
 
-    public abstract Request getRequestAcceptable();
+    public abstract boolean validateRequest(Request request);
 
     public void setNext(Employee next) {
         this.next = next;
@@ -49,15 +50,15 @@ public abstract class Employee {
                 this.getExtraInfo();
     }
 
-    public String requestHandler(Request request) {
-        if (this.getRequestAcceptable() == request) {
-            return this.resolveRequest(request);
+    public String requestHandler(Request request, Reservation reservation) {
+        if (this.validateRequest(request)) {
+            return this.resolveRequest(request, reservation);
         } else if (this.next != null) {
-            return this.next.requestHandler(request);
+            return this.next.requestHandler(request, reservation);
         } else {
             return "No employee can handle this request";
         }
     }
 
-    public abstract String resolveRequest(Request request);
+    public abstract String resolveRequest(Request request, Reservation reservation);
 }

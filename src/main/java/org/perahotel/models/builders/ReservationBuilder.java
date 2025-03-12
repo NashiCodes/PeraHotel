@@ -9,8 +9,8 @@ import java.util.UUID;
 public class ReservationBuilder implements Builder<Reservation> {
     private final Reservation reservation;
 
-    public ReservationBuilder(Room room, UUID guestId, int days, UUID ValidationCode) {
-        reservation = new Reservation(room, guestId, days, ValidationCode);
+    public ReservationBuilder(Room room, UUID guestId, int days) {
+        reservation = new Reservation(room, guestId, days);
     }
 
     public ReservationBuilder() {

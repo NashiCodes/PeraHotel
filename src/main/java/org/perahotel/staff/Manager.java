@@ -1,13 +1,11 @@
 package org.perahotel.staff;
 
-import org.perahotel.models.Hotel;
+import org.perahotel.models.Reservation;
 import org.perahotel.shared.Request;
 import org.perahotel.staff.requests.NewFranchise;
-
-import java.util.UUID;
+import org.perahotel.staff.requests.ReservationMade;
 
 public class Manager extends Employee {
-    private final UUID token = UUID.randomUUID();
     private int reservations = 0;
     private int roomsCleaned = 0;
 
@@ -23,8 +21,10 @@ public class Manager extends Employee {
     }
 
     @Override
-    public Request getRequestAcceptable() {
-        return NewFranchise.getInstance();
+    public boolean validateRequest(Request request) {
+        var isFranchise = request instanceof NewFranchise;
+        var isReservation = request instanceof ReservationMade;
+        return isFranchise || isReservation;
     }
 
     @Override
@@ -48,16 +48,22 @@ public class Manager extends Employee {
         this.roomsCleaned = roomsCleaned;
     }
 
-    public void upgradeHotel(int capacity) {
-        Hotel.getInstance().increaseHotelCapacity(capacity, this.getToken());
+    public void updateRoomsCleaned() {
+        this.roomsCleaned++;
     }
 
-    public UUID getToken() {
-        return token;
+    public void updateReservations() {
+        this.reservations++;
     }
 
     @Override
-    public String resolveRequest(Request request) {
+    public String resolveRequest(Request request, Reservation reservation) {
+        if (request instanceof ReservationMade) {
+            this.updateReservations();
+        }
+        if (request instanceof NewFranchise) {
+            return "Manager will open a new franchise";
+        }
         return "Manager will handle this request";
     }
 }

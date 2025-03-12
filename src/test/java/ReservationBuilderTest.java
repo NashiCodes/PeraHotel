@@ -34,12 +34,10 @@ public class ReservationBuilderTest {
             var room = new Room();
             var guestId = UUID.randomUUID();
             var days = 1;
-            var validationCode = UUID.randomUUID();
-            var reservation = new ReservationBuilder(room, guestId, days, validationCode).build();
+            var reservation = new ReservationBuilder(room, guestId, days).build();
             assertEquals(room, reservation.getRoom());
             assertEquals(guestId, reservation.getGuestId());
             assertEquals(days, reservation.getDays());
-            assertEquals(validationCode, reservation.getReservationValidatedBy());
         } catch (Exception e) {
             fail(e);
         }

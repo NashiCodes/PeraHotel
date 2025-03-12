@@ -13,6 +13,10 @@ public class ReservationCustom {
         this.reservation = reservation;
     }
 
+    public Reservation build() {
+        return reservation;
+    }
+
     public ReservationCustom addBreakfast() {
         if (reservation instanceof BreakfastIncluded) return this;
         reservation = new BreakfastIncluded(reservation);

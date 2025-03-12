@@ -10,6 +10,7 @@ public class Client extends Observer {
     private String email;
     private String phone;
     private Reservation reservation;
+    private double credit;
 
     public Client() {
     }
@@ -27,12 +28,35 @@ public class Client extends Observer {
     }
 
     public void checkOut() {
-
     }
 
-    public String pay() {
+    public boolean pay() {
         var amount = reservation.Cost();
-        return "Payment of " + amount + " was made";
+        if (credit >= amount) {
+            credit -= amount;
+            return true;
+        }
+        return false;
+    }
+
+    public void addCredit(double amount) {
+        if (amount < 0)
+            throw new IllegalArgumentException("Amount must be greater than 0");
+        this.credit += amount;
+    }
+
+    public void removeCredit(double amount) {
+        if (amount < 0)
+            throw new IllegalArgumentException("Amount must be greater than 0");
+        this.credit -= amount;
+    }
+
+    public double getCredit() {
+        return credit;
+    }
+
+    public void setCredit(double credit) {
+        this.credit = credit;
     }
 
     public UUID getId() {

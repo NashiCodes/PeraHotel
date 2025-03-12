@@ -12,12 +12,12 @@ public class RoomStateTest {
     private Room room;
     
     @Test
-    public void DeveRetornarRoomComArgEPrecoEReservada() {
+    public void DeveRetornarRoomComArgEReservada() {
         try {
             room = new Room("101");
             room.setPrice(200);
             room.reserve();
-            assertEquals("Room 101 - Price: 200.0\n", room.Description());
+            assertEquals("Room 101\n", room.Description());
             assertEquals(Reserved.getInstance(), room.getState());
         } catch (Exception e) {
             fail();

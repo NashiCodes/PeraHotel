@@ -6,12 +6,9 @@ import org.perahotel.models.Reservation;
 import org.perahotel.models.Room;
 import org.perahotel.models.builders.ReservationBuilder;
 import org.perahotel.shared.Request;
-import org.perahotel.staff.requests.ServicesInformation;
-
-import java.util.UUID;
+import org.perahotel.staff.requests.ReservationMade;
 
 public class Secretary extends Employee {
-    private final UUID validationCode = UUID.randomUUID();
     private int ReservationsMade = 0;
 
     public Secretary() {
@@ -19,41 +16,40 @@ public class Secretary extends Employee {
     }
 
     public void requestReservation(Client client, Room room, int days) {
-        var reservation = new ReservationBuilder(room, client.getId(), days, this.validationCode).build();
+        var reservation = new ReservationBuilder(room, client.getId(), days).build();
         client.addReservation(reservation);
     }
 
-    public Room getAvailableRoom() {
-        return Hotel.getInstance().getAvailableRoom();
+
+    public Reservation createReservation(Client client, int days) {
+        return new ReservationBuilder().setGuestId(client.getId()).setDays(days).build();
     }
 
-    public void reserve(Reservation reservation) {
-        if (validateReservation(reservation)) {
-            Hotel.getInstance().processReservation(reservation);
-            this.ReservationsMade++;
+    public void reserve(Reservation reservation, Client client) {
+        if (reservation.getGuestId() != client.getId()) {
+            throw new IllegalArgumentException("Client must be the same as the one in the reservation");
+        }
+        if (client.pay()) {
+            Hotel.getInstance().reserve(reservation);
+            this.resolveRequest(ReservationMade.getInstance(), reservation);
+        } else {
+            reservation.Decline();
+            throw new IllegalArgumentException("Client must have enough money to pay for the reservation");
         }
 
-        reservation.Decline();
-        throw new IllegalArgumentException("Reserve must be validated by the secretary that made the reservation");
     }
 
-    public boolean validateReservation(Reservation reservation) {
-        return reservation.getReservationValidatedBy().equals(this.validationCode);
+
+    public void validateReservation(Reservation reservation) {
+        reservation.Confirm();
     }
+
 
     public void checkClientIn(Client client, Reservation reservation) {
         if (reservation.getGuestId() != client.getId()) {
             throw new IllegalArgumentException("Client must be the same as the one in the reservation");
         }
-        Hotel.getInstance().checkIn(reservation);
 
-    }
-
-    public void checkClientOut(Client client, Reservation reservation) {
-        if (reservation.getGuestId() != client.getId()) {
-            throw new IllegalArgumentException("Client must be the same as the one in the reservation");
-        }
-        Hotel.getInstance().checkOut(reservation);
     }
 
     @Override
@@ -68,8 +64,8 @@ public class Secretary extends Employee {
     }
 
     @Override
-    public Request getRequestAcceptable() {
-        return ServicesInformation.getInstance();
+    public boolean validateRequest(Request request) {
+        return request instanceof ReservationMade;
     }
 
     public int getReservationsMade() {
@@ -80,8 +76,18 @@ public class Secretary extends Employee {
         ReservationsMade = reservationsMade;
     }
 
+    public void updateReservationsMade() {
+        this.ReservationsMade++;
+    }
+
     @Override
-    public String resolveRequest(Request request) {
-        return "Secretary will handle this request";
+    public String resolveRequest(Request request, Reservation reservation) {
+        if (request instanceof ReservationMade) {
+            this.updateReservationsMade();
+            this.next.requestHandler(ReservationMade.getInstance(), reservation);
+
+            return "Secretary Handled this request";
+        }
+        return "";
     }
 }

@@ -7,7 +7,7 @@ import java.util.UUID;
 
 
 public class Room {
-    private final UUID id;
+    private UUID id;
     private double Price = 100;
     private String Number;
     private RoomState State;
@@ -56,6 +56,10 @@ public class Room {
         return id;
     }
 
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
     public void reserve() {
         State.reserve(this);
     }
@@ -68,7 +72,7 @@ public class Room {
         return State.maintenance(this);
     }
 
-    public boolean occupy() {
-        return State.occupy(this);
+    public void occupy() {
+        State.occupy(this);
     }
 }
