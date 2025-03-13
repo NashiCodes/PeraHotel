@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 public class RoomStateTest {
     private Room room;
-    
+
     @Test
     public void DeveRetornarRoomComArgEReservada() {
         try {
@@ -25,7 +25,7 @@ public class RoomStateTest {
     }
 
     @Test
-    public void DeveRetornarRExceçãoReservadaEReservar() {
+    public void DeveRetornarExceçãoReservadaEReservar() {
         try {
             room = new Room("101");
             room.setPrice(200);
@@ -40,7 +40,7 @@ public class RoomStateTest {
     }
 
     @Test
-    public void DeveRetornarRExceçãoManutençãoEReservar() {
+    public void DeveRetornarExceçãoManutençãoEReservar() {
         try {
             room = new Room("101");
             room.setPrice(200);
@@ -55,7 +55,7 @@ public class RoomStateTest {
     }
 
     @Test
-    public void DeveRetornarRExceçãoOcupadaEReservar() {
+    public void DeveRetornarExceçãoOcupadaEReservar() {
         try {
             room = new Room("101");
             room.setPrice(200);
@@ -70,7 +70,7 @@ public class RoomStateTest {
     }
 
     @Test
-    public void DeveRetornarRExceçãoManutençãoEManutenção() {
+    public void DeveRetornarExceçãoManutençãoEManutenção() {
         try {
             room = new Room("101");
             room.setPrice(200);

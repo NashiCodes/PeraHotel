@@ -14,6 +14,6 @@ public class BreakfastIncluded extends ReservationDecorator {
 
     @Override
     public double Cost() {
-        return reservationDecorated.Cost() + 10;
+        return reservationDecorated.Cost() + (reservationDecorated.getDays() * 10);
     }
 }

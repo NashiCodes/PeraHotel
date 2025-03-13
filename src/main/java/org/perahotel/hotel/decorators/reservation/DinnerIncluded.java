@@ -14,6 +14,6 @@ public class DinnerIncluded extends ReservationDecorator {
 
     @Override
     public double Cost() {
-        return reservationDecorated.Cost() + 20;
+        return reservationDecorated.Cost() + (reservationDecorated.getDays() * 20);
     }
 }

@@ -15,6 +15,7 @@ public class Reservation {
 
 
     public Reservation() {
+        this.setState(InProgress.getInstance());
     }
 
     public Reservation(Room room, UUID guestId, int days) {
@@ -34,8 +35,9 @@ public class Reservation {
         room.maintenance();
     }
 
-    public boolean Cancel() {
-        return state.Cancel(this);
+    public void Cancel() {
+        state.Cancel(this);
+        room.available();
     }
 
     public void Decline() {

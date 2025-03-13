@@ -7,7 +7,10 @@ public abstract class ReservationDecorator extends Reservation implements Decora
     protected Reservation reservationDecorated;
 
     public ReservationDecorator(Reservation reservationDecorated) {
-        super();
+        this.setGuestId(reservationDecorated.getGuestId());
+        this.setRoom(reservationDecorated.getRoom());
+        this.setDays(reservationDecorated.getDays());
+        this.setState(reservationDecorated.getState());
         this.reservationDecorated = reservationDecorated;
     }
 

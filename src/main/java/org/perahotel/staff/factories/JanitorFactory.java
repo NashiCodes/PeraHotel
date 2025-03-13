@@ -10,7 +10,7 @@ public class JanitorFactory extends Factory<Janitor> {
         var janitor = new Janitor();
         janitor.setName(name);
         janitor.setSalary(1500.0);
-        janitor.setBonus(2.0);
+        janitor.setBonus(20.0);
 
         return janitor;
     }

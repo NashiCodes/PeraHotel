@@ -1,11 +1,16 @@
 package org.perahotel.staff;
 
+import org.perahotel.hotel.decorators.reservation.BreakfastIncluded;
+import org.perahotel.hotel.decorators.reservation.DinnerIncluded;
+import org.perahotel.hotel.decorators.reservation.LunchIncluded;
+import org.perahotel.hotel.decorators.reservation.SnacksIncluded;
+import org.perahotel.hotel.decorators.room.*;
 import org.perahotel.models.Client;
 import org.perahotel.models.Hotel;
 import org.perahotel.models.Reservation;
-import org.perahotel.models.Room;
 import org.perahotel.models.builders.ReservationBuilder;
 import org.perahotel.shared.Request;
+import org.perahotel.staff.requests.CleanRoom;
 import org.perahotel.staff.requests.ReservationMade;
 
 public class Secretary extends Employee {
@@ -15,21 +20,26 @@ public class Secretary extends Employee {
         super();
     }
 
-    public void requestReservation(Client client, Room room, int days) {
-        var reservation = new ReservationBuilder(room, client.getId(), days).build();
-        client.addReservation(reservation);
-    }
-
 
     public Reservation createReservation(Client client, int days) {
-        return new ReservationBuilder().setGuestId(client.getId()).setDays(days).build();
+        var room = Hotel.getInstance().getAvailableRoom();
+
+        var reservation = new ReservationBuilder()
+                .setGuestId(client.getId())
+                .setRoom(room)
+                .setDays(days)
+                .build();
+
+        client.addReservation(reservation);
+
+        return reservation;
     }
 
     public void reserve(Reservation reservation, Client client) {
         if (reservation.getGuestId() != client.getId()) {
             throw new IllegalArgumentException("Client must be the same as the one in the reservation");
         }
-        if (client.pay()) {
+        if (client.getCredit() >= reservation.Cost()) {
             Hotel.getInstance().reserve(reservation);
             this.resolveRequest(ReservationMade.getInstance(), reservation);
         } else {
@@ -39,17 +49,19 @@ public class Secretary extends Employee {
 
     }
 
-
-    public void validateReservation(Reservation reservation) {
-        reservation.Confirm();
-    }
-
-
     public void checkClientIn(Client client, Reservation reservation) {
         if (reservation.getGuestId() != client.getId()) {
             throw new IllegalArgumentException("Client must be the same as the one in the reservation");
         }
+        Hotel.getInstance().checkIn(reservation);
+    }
 
+    public void checkClientOut(Client client, Reservation reservation) {
+        if (reservation.getGuestId() != client.getId()) {
+            throw new IllegalArgumentException("Client must be the same as the one in the reservation");
+        }
+        this.resolveRequest(CleanRoom.getInstance(), reservation);
+        Hotel.getInstance().checkOut(reservation);
     }
 
     @Override
@@ -89,5 +101,98 @@ public class Secretary extends Employee {
             return "Secretary Handled this request";
         }
         return "";
+    }
+
+    public void addDinner(Client client) {
+        var reservation = client.getReservation();
+        reservation = new DinnerIncluded(reservation);
+        client.addReservation(reservation);
+    }
+
+    public void addBreakfast(Client client) {
+        var reservation = client.getReservation();
+        reservation = new BreakfastIncluded(reservation);
+        client.addReservation(reservation);
+    }
+
+    public void addSnacks(Client client) {
+        var reservation = client.getReservation();
+        reservation = new SnacksIncluded(reservation);
+        client.addReservation(reservation);
+    }
+
+    public void addLunch(Client client) {
+        var reservation = client.getReservation();
+        reservation = new LunchIncluded(reservation);
+        client.addReservation(reservation);
+    }
+
+    public void addAllMeals(Client client) {
+        var reservation = client.getReservation();
+        reservation = new BreakfastIncluded(reservation);
+        reservation = new LunchIncluded(reservation);
+        reservation = new DinnerIncluded(reservation);
+        reservation = new SnacksIncluded(reservation);
+        client.addReservation(reservation);
+    }
+
+    public void addWifi(Client client) {
+        var reservation = client.getReservation();
+        var room = reservation.getRoom();
+        room = new WifiRoom(room);
+        reservation.setRoom(room);
+        client.addReservation(reservation);
+    }
+
+    public void addKingSizeBed(Client client) {
+        var reservation = client.getReservation();
+        var room = reservation.getRoom();
+        room = new KingSize(room);
+        reservation.setRoom(room);
+        client.addReservation(reservation);
+    }
+
+    public void addDoubleBathroom(Client client) {
+        var reservation = client.getReservation();
+        var room = reservation.getRoom();
+        room = new DoubleBathroom(room);
+        reservation.setRoom(room);
+        client.addReservation(reservation);
+    }
+
+    public void addBalcony(Client client) {
+        var reservation = client.getReservation();
+        var room = reservation.getRoom();
+        room = new Balcony(room);
+        reservation.setRoom(room);
+        client.addReservation(reservation);
+    }
+
+    public void addDoubleSingleBed(Client client) {
+        var reservation = client.getReservation();
+        var room = reservation.getRoom();
+        room = new DoubleSingleBed(room);
+        reservation.setRoom(room);
+        client.addReservation(reservation);
+    }
+
+    public void addAllRoomFeatures(Client client) {
+        var reservation = client.getReservation();
+        var room = reservation.getRoom();
+        room = new WifiRoom(room);
+        room = new KingSize(room);
+        room = new DoubleBathroom(room);
+        room = new Balcony(room);
+        room = new DoubleSingleBed(room);
+        reservation.setRoom(room);
+        client.addReservation(reservation);
+    }
+
+    public void cancelReservation(Reservation reservation, Client client) {
+        if (reservation.getGuestId() != client.getId()) {
+            throw new IllegalArgumentException("Client must be the same as the one in the reservation");
+        }
+
+        Hotel.getInstance().cancelReservation(reservation);
     }
 }

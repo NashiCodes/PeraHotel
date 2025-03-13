@@ -49,12 +49,13 @@ public class Hotel {
         if (hasRoomAvailable()) {
             return Rooms.get(Available.getInstance()).getFirst();
         }
-        throw new IllegalArgumentException("No rooms available");
+        createRooms();
+        return getAvailableRoom();
     }
 
     public void checkIn(Reservation reservation) {
         reservation.CheckIn();
-        this.Rooms.get(Available.getInstance()).remove(reservation.getRoom());
+        this.Rooms.get(Reserved.getInstance()).remove(reservation.getRoom());
         this.Rooms.get(Occupied.getInstance()).add(reservation.getRoom());
     }
 
@@ -64,7 +65,22 @@ public class Hotel {
             throw new IllegalArgumentException("Someone already reserved this room");
         }
         reservation.Confirm();
-        this.Rooms.get(Available.getInstance()).remove(room);
+        var roomId = room.getId();
+        var AvailableRooms = this.Rooms.get(Available.getInstance());
+        AvailableRooms.removeIf(r -> r.getId().equals(roomId));
         this.Rooms.get(Reserved.getInstance()).add(room);
+    }
+
+    public void cancelReservation(Reservation reservation) {
+        var room = reservation.getRoom();
+        this.Rooms.get(room.getState()).remove(room);
+        reservation.Cancel();
+        this.Rooms.get(Available.getInstance()).add(room);
+    }
+
+    public void checkOut(Reservation reservation) {
+        var room = reservation.getRoom();
+        this.Rooms.get(room.getState()).remove(room);
+        reservation.CheckOut();
     }
 }

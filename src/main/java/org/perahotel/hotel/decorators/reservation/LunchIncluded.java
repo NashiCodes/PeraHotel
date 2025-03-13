@@ -14,6 +14,6 @@ public class LunchIncluded extends ReservationDecorator {
 
     @Override
     public double Cost() {
-        return reservationDecorated.Cost() + 15;
+        return reservationDecorated.Cost() + (reservationDecorated.getDays() * 15);
     }
 }

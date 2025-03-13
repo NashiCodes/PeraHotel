@@ -1,5 +1,6 @@
 package org.perahotel.models.builders;
 
+import org.perahotel.hotel.states.reservation.InProgress;
 import org.perahotel.models.Reservation;
 import org.perahotel.models.Room;
 import org.perahotel.shared.Builder;
@@ -46,9 +47,7 @@ public class ReservationBuilder implements Builder<Reservation> {
             throw new IllegalArgumentException("Days must be greater than 0");
         if (reservation.getDays() > 30)
             throw new IllegalArgumentException("You can't reserve a room for more than 30 days");
-    }
-
-    private boolean invalidString(String str) {
-        return str == null || str.isBlank();
+        if (reservation.getState() != InProgress.getInstance())
+            throw new IllegalArgumentException("Invalid reservation state");
     }
 }

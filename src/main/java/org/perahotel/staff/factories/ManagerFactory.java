@@ -10,7 +10,7 @@ public class ManagerFactory extends Factory<Manager> {
         var manager = new Manager();
         manager.setName(name);
         manager.setSalary(3000.0);
-        manager.setBonus(6.0);
+        manager.setBonus(60.0);
 
         return manager;
     }

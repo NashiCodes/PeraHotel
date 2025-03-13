@@ -90,4 +90,8 @@ public class Client extends Observer {
     public void addReservation(Reservation reservationCustom) {
         this.reservation = reservationCustom;
     }
+
+    public Reservation getReservation() {
+        return this.reservation;
+    }
 }

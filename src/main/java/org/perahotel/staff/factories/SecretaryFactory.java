@@ -9,7 +9,7 @@ public class SecretaryFactory extends Factory<Secretary> {
         var secretary = new Secretary();
         secretary.setName(name);
         secretary.setSalary(2000.0);
-        secretary.setBonus(4.0);
+        secretary.setBonus(40.0);
 
         return secretary;
     }

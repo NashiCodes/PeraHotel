@@ -8,6 +8,10 @@ public abstract class RoomDecorator extends Room implements Decorator {
 
     public RoomDecorator(Room roomDecorated) {
         this.roomDecorated = roomDecorated;
+        this.setId(roomDecorated.getId());
+        this.setNumber(roomDecorated.getNumber());
+        this.setPrice(roomDecorated.Cost());
+        this.setState(roomDecorated.getState());
     }
 
     @Override
