@@ -12,6 +12,7 @@ public abstract class RoomDecorator extends Room implements Decorator {
         this.setNumber(roomDecorated.getNumber());
         this.setPrice(roomDecorated.Cost());
         this.setState(roomDecorated.getState());
+        this.setLastMessage(roomDecorated.getLastMessage());
     }
 
     @Override
@@ -22,5 +23,10 @@ public abstract class RoomDecorator extends Room implements Decorator {
     @Override
     public double Cost() {
         return roomDecorated.Cost();
+    }
+
+    @Override
+    public String getLastMessage() {
+        return roomDecorated.getLastMessage();
     }
 }

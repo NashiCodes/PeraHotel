@@ -1,6 +1,7 @@
 package org.perahotel.staff;
 
 import org.perahotel.hotel.states.room.Maintenance;
+import org.perahotel.models.Hotel;
 import org.perahotel.models.Reservation;
 import org.perahotel.models.Room;
 import org.perahotel.shared.Request;
@@ -9,7 +10,6 @@ import org.perahotel.staff.requests.MaintenanceRequest;
 
 public class Janitor extends Employee {
     private int roomsCleaned = 0;
-    private int roomsMaintained = 0;
 
     public Janitor() {
         super();
@@ -46,24 +46,17 @@ public class Janitor extends Employee {
             throw new IllegalArgumentException("Room must be in maintenance state");
         }
 
+        var cleanedRoom = new Room(room.getNumber());
+        cleanedRoom.setId(room.getId());
+        cleanedRoom.setPrice(room.Cost());
+        cleanedRoom.setState(room.getState());
+        cleanedRoom.setLastMessage(room.getLastMessage());
+
+        cleanedRoom.available();
+
+        Hotel.getInstance().addCleanedRoom(cleanedRoom);
+
         this.roomsCleaned++;
-    }
-
-    public void fixRoom(Room room) {
-        if (room.getState() != Maintenance.getInstance()) {
-            throw new IllegalArgumentException("Room must be in maintenance state");
-        }
-
-        this.roomsMaintained++;
-        this.roomsCleaned++;
-    }
-
-    public int getRoomsMaintained() {
-        return roomsMaintained;
-    }
-
-    public void setRoomsMaintained(int roomsMaintained) {
-        this.roomsMaintained = roomsMaintained;
     }
 
 
@@ -71,11 +64,8 @@ public class Janitor extends Employee {
     public String resolveRequest(Request request, Reservation reservation) {
         if (request instanceof CleanRoom) {
             this.cleanRoom(reservation.getRoom());
+            this.next.requestHandler(request, reservation);
             return "Janitor cleaned the room";
-        }
-        if (request instanceof MaintenanceRequest) {
-            this.fixRoom(reservation.getRoom());
-            return "Janitor fixed the room";
         }
         return "Janitor will handle this request";
     }

@@ -5,6 +5,7 @@ import org.perahotel.hotel.decorators.reservation.DinnerIncluded;
 import org.perahotel.hotel.decorators.reservation.LunchIncluded;
 import org.perahotel.hotel.decorators.reservation.SnacksIncluded;
 import org.perahotel.hotel.decorators.room.*;
+import org.perahotel.hotel.states.reservation.CheckedIn;
 import org.perahotel.models.Client;
 import org.perahotel.models.Hotel;
 import org.perahotel.models.Reservation;
@@ -60,8 +61,16 @@ public class Secretary extends Employee {
         if (reservation.getGuestId() != client.getId()) {
             throw new IllegalArgumentException("Client must be the same as the one in the reservation");
         }
-        this.resolveRequest(CleanRoom.getInstance(), reservation);
-        Hotel.getInstance().checkOut(reservation);
+        if (reservation.getState() != CheckedIn.getInstance()) {
+            throw new IllegalArgumentException("Client must be checked in to check out");
+        }
+
+        if (client.pay()) {
+            Hotel.getInstance().checkOut(reservation);
+            this.requestHandler(CleanRoom.getInstance(), reservation);
+        } else
+            throw new IllegalArgumentException("Client must have enough money to pay for the reservation");
+
     }
 
     @Override
@@ -192,7 +201,11 @@ public class Secretary extends Employee {
         if (reservation.getGuestId() != client.getId()) {
             throw new IllegalArgumentException("Client must be the same as the one in the reservation");
         }
+        if (client.pay()) {
+            Hotel.getInstance().cancelReservation(reservation);
+        } else
+            throw new IllegalArgumentException("Client must have enough money to pay for the reservation");
 
-        Hotel.getInstance().cancelReservation(reservation);
+
     }
 }

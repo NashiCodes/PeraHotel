@@ -2,11 +2,12 @@ package org.perahotel.models;
 
 import org.perahotel.hotel.states.room.Available;
 import org.perahotel.hotel.states.room.RoomState;
+import org.perahotel.observer.Observer;
 
 import java.util.UUID;
 
 
-public class Room {
+public class Room extends Observer {
     private UUID id;
     private double Price = 100;
     private String Number;
@@ -74,5 +75,10 @@ public class Room {
 
     public void occupy() {
         State.occupy(this);
+    }
+
+    @Override
+    public void update(String message) {
+        super.update(message);
     }
 }

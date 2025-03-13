@@ -5,7 +5,7 @@ public class Observer {
 
     public void update(String message) {
         if (!message.equals(this.getLastMessage())) {
-            this.setLastMessage("[ALERT] : " + message);
+            setLastMessage("[ALERT] : " + message);
         }
     }
 

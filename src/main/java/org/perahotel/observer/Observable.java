@@ -11,6 +11,8 @@ public class Observable {
     }
 
     public void notifyObservers(String message) {
-        observers.forEach(observer -> observer.update(message));
+        for (var observer : observers) {
+            observer.update(message);
+        }
     }
 }
