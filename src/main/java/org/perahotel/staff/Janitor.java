@@ -6,7 +6,6 @@ import org.perahotel.models.Reservation;
 import org.perahotel.models.Room;
 import org.perahotel.shared.Request;
 import org.perahotel.staff.requests.CleanRoom;
-import org.perahotel.staff.requests.MaintenanceRequest;
 
 public class Janitor extends Employee {
     private int roomsCleaned = 0;
@@ -23,9 +22,7 @@ public class Janitor extends Employee {
 
     @Override
     public boolean validateRequest(Request request) {
-        var isCleanRoom = request instanceof CleanRoom;
-        var isMaintenance = request instanceof MaintenanceRequest;
-        return isMaintenance || isCleanRoom;
+        return request instanceof CleanRoom;
     }
 
     @Override
@@ -35,10 +32,6 @@ public class Janitor extends Employee {
 
     public int getRoomsCleaned() {
         return roomsCleaned;
-    }
-
-    public void setRoomsCleaned(int roomsCleaned) {
-        this.roomsCleaned = roomsCleaned;
     }
 
     public void cleanRoom(Room room) {

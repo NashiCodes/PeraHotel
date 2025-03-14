@@ -3,7 +3,6 @@ package org.perahotel.staff;
 import org.perahotel.models.Reservation;
 import org.perahotel.shared.Request;
 import org.perahotel.staff.requests.CleanRoom;
-import org.perahotel.staff.requests.NewFranchise;
 import org.perahotel.staff.requests.ReservationMade;
 
 public class Manager extends Employee {
@@ -23,10 +22,9 @@ public class Manager extends Employee {
 
     @Override
     public boolean validateRequest(Request request) {
-        var isFranchise = request instanceof NewFranchise;
         var isReservation = request instanceof ReservationMade;
         var isCleanRoom = request instanceof CleanRoom;
-        return isFranchise || isReservation || isCleanRoom;
+        return isReservation || isCleanRoom;
     }
 
     @Override
@@ -38,16 +36,8 @@ public class Manager extends Employee {
         return reservations;
     }
 
-    public void setReservations(int reservations) {
-        this.reservations = reservations;
-    }
-
     public int getRoomsCleaned() {
         return roomsCleaned;
-    }
-
-    public void setRoomsCleaned(int roomsCleaned) {
-        this.roomsCleaned = roomsCleaned;
     }
 
     public void updateRoomsCleaned() {
@@ -62,9 +52,6 @@ public class Manager extends Employee {
     public String resolveRequest(Request request, Reservation reservation) {
         if (request instanceof ReservationMade) {
             this.updateReservations();
-        }
-        if (request instanceof NewFranchise) {
-            return "Manager will open a new franchise";
         }
         if (request instanceof CleanRoom) {
             this.updateRoomsCleaned();

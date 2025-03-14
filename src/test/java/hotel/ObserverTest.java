@@ -14,7 +14,7 @@ public class ObserverTest {
         Hotel.getInstance().updateBaseRoomsPrice(newPrice);
 
         for (var room : rooms) {
-            assertEquals(newPrice, room.Cost());
+            assertEquals(newPrice, room.getBasePrice());
             assertEquals("[ALERT] : Price updated to 250.0", room.getLastMessage());
         }
     }

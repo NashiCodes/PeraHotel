@@ -29,4 +29,9 @@ public abstract class RoomDecorator extends Room implements Decorator {
     public String getLastMessage() {
         return roomDecorated.getLastMessage();
     }
+
+    @Override
+    public void setLastMessage(String lastMessage) {
+        roomDecorated.setLastMessage(lastMessage);
+    }
 }

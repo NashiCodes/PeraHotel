@@ -53,6 +53,10 @@ public class Room extends Observer {
         this.Price = price;
     }
 
+    public double getBasePrice() {
+        return Price;
+    }
+
     public UUID getId() {
         return id;
     }

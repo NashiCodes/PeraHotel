@@ -98,8 +98,11 @@ public class Hotel extends Observable {
         reservation.Confirm();
         var roomId = room.getId();
         var AvailableRooms = this.Rooms.get(Available.getInstance());
-        AvailableRooms.removeIf(r -> r.getId().equals(roomId));
+        var auxRoom = AvailableRooms.stream().filter(r -> r.getId().equals(roomId)).findFirst().orElse(null);
+        AvailableRooms.remove(auxRoom);
         this.Rooms.get(Reserved.getInstance()).add(room);
+        this.removeObserver(auxRoom);
+        this.addObserver(room);
     }
 
     public void cancelReservation(Reservation reservation) {
@@ -118,7 +121,11 @@ public class Hotel extends Observable {
 
     public void addCleanedRoom(Room room) {
         var maintenanceRooms = this.Rooms.get(Maintenance.getInstance());
+        var auxRoom = maintenanceRooms.stream().filter(r -> r.getId().equals(room.getId())).findFirst().orElse(null);
         maintenanceRooms.removeIf(r -> r.getId().equals(room.getId()));
         this.Rooms.get(Available.getInstance()).add(room);
+
+        this.removeObserver(auxRoom);
+        this.addObserver(room);
     }
 }
