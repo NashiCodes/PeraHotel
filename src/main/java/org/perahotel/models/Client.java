@@ -1,10 +1,8 @@
 package org.perahotel.models;
 
-import org.perahotel.observer.Observer;
-
 import java.util.UUID;
 
-public class Client extends Observer {
+public class Client {
     private UUID clientId;
     private String name;
     private String email;
